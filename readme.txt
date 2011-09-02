@@ -23,12 +23,16 @@ This widget shows you upcoming events for a configurable iCalendar .ics file. Th
 * Switch on/off event location
 * Switch on/off event URL
 
+= Supported languages =
+* English
+* German
+
 
 == Installation ==
 
 This section describes how to install the plugin and get it working.
 
-1. Upload the complete 'iCalEvents/' directory to '/wp-content/plugins/' directory of your active theme
+1. Upload the complete 'icalendar-events-widget/' directory to '/wp-content/plugins/' directory of your active theme
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Go to the 'Widgets' menue in WordPress and put it on the right place of your sidebar
 
@@ -57,11 +61,12 @@ n/a
 
 == Development ==
 
-Sources of this widget are available via SVN:
+The package of this plugin is available for download at:
+http://downloads.wordpress.org/plugin/icalendar-events-widget.zip
 
 
 
 == Customization ==
 
 
-Please check the **icalendar.css** file and the templates in the templates folder for styling options.
+Please check the **icalendar.css** file for style customization and the templates in the templates folder for styling options.

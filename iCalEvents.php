@@ -264,6 +264,11 @@ class iCalEvents extends WP_Widget {
 		$iCal = new ical($iCalURI);
 		$currentDate = new DateTime('2038/12/31');
 		$iCalEvents = $iCal->events();
+/*
+		$rangeFrom = new DateTime('2011/09/01');
+		$rangeTo = new DateTime('2011/09/30');
+		$iCalEvents = $iCal->eventsFromRange( $rangeFrom, $rangeTo );
+*/
 
 		// if the title for this event list is not given
 		// by the options, so set the widget title to iCal name
