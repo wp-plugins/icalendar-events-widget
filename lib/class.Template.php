@@ -1,21 +1,29 @@
 <?php
-/**
- * @fileoverview This PHP-Class should only read a iCal-File (*.ics), parse it
- * and give an array with its content.
- *
- * @author: Frank Gregor
- * @version: 1.0
- * @website: http://programmschmie.de
- * @example
- *     $ical = new ical('MyCal.ics');
- *     print_r( $ical->get_event_array() );
- */
+/*
+	iCalendar Events Widget Template Class
+	
+	Author: Frank Gregor <phranck@programmschmie.de>
+	Author URI: http://programmschmie.de
+	
+	$Id$
+*/
+/* 
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+	Online: http://www.gnu.org/licenses/gpl.txt
+*/
 
-/**
- * This is the iCal-class
- * @param {string} filename The name of the file which should be parsed
- * @constructor
- */
 
 class Template
 {
@@ -54,18 +62,15 @@ class Template
 				exit;
 			}
 		}
-
-		// nach objecten parsen
-		//$this->objectFindTokens();
 	}
 
 
     /**
      * This method assings a given content string to a token. The token will replaced by this content string.
      *
-     * @param {string} $content	the content string for replacing the $token
      * @param {string} $token	which is the inner part of a template text token like:
      *                          {REPLACE_THIS} - REPLACE_THIS will be replaced by the content of $content
+     * @param {string} $content	the content string for replacing the $token
      *
      * @return {string} the current template where the $token ist replaced by $content
      */
@@ -75,20 +80,35 @@ class Template
 		$this->_tpl_out = $template;												// und template zurueck
 	}
 
-	// einen platzhalter loeschen
+
+    /**
+     * Deletes a token from the template
+     *
+     * @param {string} $token	the token to delete
+     */
 	function deleteToken( $token ) {
 		$template = $this->_tpl_out;												// buffered template uebergeben
 		$template = str_ireplace("{". $token ."}", "", $template);
 		$this->_tpl_out = $template;												// und template zurueck
 	}
 
-	// aktuelles template anzeigen
+
+    /**
+     * Shows the current template
+     *
+     * @return {string} 		the current template which all tokens replaced by content
+     */
 	function show() {
 		echo $this->_tpl_out;
 		flush();
 	}
 
-	// aktuelles template zurueckgeben
+
+    /**
+     * Returns the current template
+     *
+     * @return {string} 		the current template
+     */
 	function get() {
 		return $this->_tpl_out;
 	}
@@ -100,7 +120,12 @@ class Template
 }
 
 
-
+/**
+ * Extends the Template BaseClass. This class is for file templates only
+ *
+ * @param {string}		the name of the template to be loaded. It must include
+ *                      a complete path
+ */
 class TemplateFromFile extends Template {
 	// konstruktor //
 	public function TemplateFromFile($filename) {

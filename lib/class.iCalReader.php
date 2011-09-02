@@ -1,24 +1,30 @@
 <?
-/**
- * @fileoverview This PHP-Class should only read a iCal-File (*.ics), parse it
- * and give an array with its content.
- *
- * @author: Martin Thoma
- * @version: 1.0
- * @website: http://code.google.com/p/ics-parser/
- * @example
- *     $ical = new ical('MyCal.ics');
- *     print_r( $ical->get_event_array() );
- */
+/*
+	@fileoverview This PHP-Class should only read a iCal-File (*.ics), parse it
+
+	@author: Martin Thoma
+	@version: 1.0
+	@website: http://code.google.com/p/ics-parser/
+	@example
+				$ical = new ical('MyCal.ics');
+				print_r( $ical->get_event_array() );
+	
+	=== Change Log ===
+	2011-09-01  fg      * all methods are renamed by the file naming conventions
+                          of PHP (and the Zend Framework)
+                        * method sortEventsWithOrder(..) added
+                        * method eventsFromRange(..) added
+                        * metho hasEvents() added
+*/
+
+
+error_reporting(E_ALL);
 
 /**
  * This is the iCal-class
  * @param {string} filename The name of the file which should be parsed
  * @constructor
  */
-
-error_reporting(E_ALL);
-
 class ical {
     /* How many ToDos are in this ical? */
     public  /** @type {int} */ $todo_count = 0;
@@ -133,7 +139,7 @@ class ical {
      * @param {string} $text which is like "VCALENDAR:Begin" or "LOCATION:"
      * @return {Array} array("VCALENDAR", "Begin")
      */
-    function keyValueFromString($text) {
+    public function keyValueFromString($text) {
         preg_match("/([^:]+)[:]([\w\W]*)/", $text, $matches);
         if(count($matches) == 0){return false;}
         $matches = array_splice($matches, 1, 2);
