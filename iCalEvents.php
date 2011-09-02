@@ -9,6 +9,8 @@
 	Author URI: http://programmschmie.de
 	Text Domain: icalevents
 	Domain Path: /languages
+	
+	$Id$
 */
 /* 
 	This program is free software; you can redistribute it and/or modify
