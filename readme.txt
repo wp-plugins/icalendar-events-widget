@@ -23,7 +23,7 @@ This widget shows you upcoming events for a configurable iCalendar .ics file. Th
 * Switch on/off event location
 * Switch on/off event URL
 
-= Supported languages =
+= Translations =
 * English
 * German
 
