@@ -14,7 +14,7 @@
                           of PHP (and the Zend Framework)
                         * method sortEventsWithOrder(..) added
                         * method eventsFromRange(..) added
-                        * metho hasEvents() added
+                        * method hasEvents() added
 */
 
 
@@ -25,7 +25,7 @@ error_reporting(E_ALL);
  * @param {string} filename The name of the file which should be parsed
  * @constructor
  */
-class ical {
+class iCal {
     /* How many ToDos are in this ical? */
     public  /** @type {int} */ $todo_count = 0;
 
@@ -47,9 +47,9 @@ class ical {
         } else {
             foreach ($lines as $line) {
                 $line = trim($line);
-                $add = $this->split_key_value($line);
+                $add = $this->keyValueFromString($line);
                 if($add === false){
-                    $this->add_to_array($type, false, $line);
+                    $this->addCalendarComponentWithKeyAndValue($type, false, $line);
                     continue;
                 } 
 
@@ -220,7 +220,7 @@ class ical {
 		// loop through all events by adding two new elements
 		foreach( $events as $anEvent ) {
 			$timestamp = $this->iCalDateToUnixTimestamp($anEvent['DTSTART']);
-			if ($timestamp >= $rangeStart)
+			if ($timestamp >= $rangeStart && $timestamp <= $rangeEnd)
 				$extendedEvents[] = $anEvent;
 		}
 

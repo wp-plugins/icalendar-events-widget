@@ -22,6 +22,7 @@ This widget shows you upcoming events for a configurable iCalendar .ics file. Th
 * Switch on/off event description
 * Switch on/off event location
 * Switch on/off event URL
+* Setting up a range of dates that events will be shown
 
 = Translations =
 * English
@@ -50,9 +51,11 @@ n/a
 
 == Changelog ==
 
-= 0.1 =
-The very first version.
-
+* = 0.1.0 =
+    * The very first version.
+* = 0.2.0 =
+    * added some very basic functionality for selecting a date range
+    * minor bugfixes
 
 == Upgrade Notice ==
 
@@ -63,6 +66,8 @@ n/a
 
 The package of this plugin is available for download at:
 http://downloads.wordpress.org/plugin/icalendar-events-widget.zip
+
+This widget makes use of the ics-parser class by Martin Thoma <http://code.google.com/p/ics-parser/>.
 
 
 

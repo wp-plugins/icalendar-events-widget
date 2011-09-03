@@ -3,12 +3,14 @@
 	Plugin Name: iCalendar Events Widget
 	Plugin Script: iCalEvents.php
 	Plugin URI: http://programmschmie.de/software/web/iCalEvents/
-	Description: Shows you upcoming events for a configurable iCalendar .ics file.
-	Version: v0.1b
+	Description: Shows you upcoming events for a configurable iCalendar .ics file. You can also set a range of dates.
+	Version: 0.2.0
 	Author: [programmschmie.de]
 	Author URI: http://programmschmie.de
 	Text Domain: icalevents
 	Domain Path: /languages
+	
+	http://www.eyecon.ro/datepicker/#about
 	
 	$Id$
 */
@@ -30,15 +32,17 @@
 */
 
 
-define('ICALEVENTS_VERSION', '0.1');
+define('ICALEVENTS_VERSION', '0.2.0');
 
 class iCalEvents extends WP_Widget {
-	public $newline = "\n";
+	private $newline = "\n";
 	
 	private	/** @type {string} */ $widgetFilePath;
 	private /** @type {string} */ $libPath;
 	private /** @type {string} */ $templatePath;
 	private /** @type {string} */ $languagePath;
+	private /** @type {string} */ $cssPath;
+	private /** @type {string} */ $javaScriptPath;
     
     
     function iCalEvents() {
@@ -46,6 +50,8 @@ class iCalEvents extends WP_Widget {
 		$this->libPath			= $this->widgetFilePath.'/lib/';
 		$this->templatePath		= $this->widgetFilePath.'/templates/';
 		$this->languagePath		= $this->widgetFilePath.'/languages/';
+		$this->cssPath			= basename(dirname(__FILE__)).'/css/';
+		$this->javaScriptPath	= basename(dirname(__FILE__)).'/js/';
 	    
         load_plugin_textdomain('icalevents', 'false', $this->languagePath);
     
@@ -55,13 +61,18 @@ class iCalEvents extends WP_Widget {
 	    if (!file_exists( $this->libPath.'class.Template.php' )) return false;
 	    require_once( $this->libPath.'class.Template.php' );
 
+		// widgets own css styles
+	    wp_register_style('iCalendarCSS', plugins_url($this->cssPath.'icalendar.css'), array(), ICALEVENTS_VERSION, 'screen');
+	    wp_enqueue_style('iCalendarCSS');
 
-	    $css_url = plugins_url(basename(dirname(__FILE__)) . '/icalendar.css');
-	    wp_register_style('iCalEvents', $css_url, array(), ICALEVENTS_VERSION, 'screen');
-	    wp_enqueue_style('iCalEvents');
+		// widgets own javascript files
+	    wp_register_script('iCalendarJS', plugins_url($this->javaScriptPath.'icalendar.js'), false, ICALEVENTS_VERSION);
+	    wp_enqueue_script('iCalendarJS');
+	    
+	    // the date picker stuff
 
 		$widget_ops = array('classname' => __CLASS__, 'description' => __('Shows you upcoming events for a configurable iCalendar .ics file.', 'icalevents'));
-		parent::WP_Widget(__CLASS__, 'iCalendar Events', $widget_ops);
+		parent::WP_Widget(__CLASS__, 'iCalEvents', $widget_ops);
     }
 
     function form( $instance ) {
@@ -78,6 +89,8 @@ class iCalEvents extends WP_Widget {
 			$showEventDescription	= esc_attr( $instance[ 'showEventDescription' ] );
 			$showEventLocation		= esc_attr( $instance[ 'showEventLocation' ] );
 			$showEventURL			= esc_attr( $instance[ 'showEventURL' ] );
+			$showEventRangeDateFrom	= esc_attr( $instance[ 'showEventRangeDateFrom' ] );
+			$showEventRangeDateTo	= esc_attr( $instance[ 'showEventRangeDateTo' ] );
 			
 		// setting up default values for all widget options
 		} else {
@@ -92,16 +105,23 @@ class iCalEvents extends WP_Widget {
 			$showEventDescription	= true;			// 0/false = no, 1/true = yes
 			$showEventLocation		= true;			// 0/false = no, 1/true = yes
 			$showEventURL			= false;		// 0/false = no, 1/true = yes
+			$showEventRangeDateFrom	= '';
+			$showEventRangeDateTo	= '';
 		}
 		
 		// build an asoc array with all of our options as items
 		$widgetOptions = array(
+
+			// ---------------------------------------------------------------------
+			// list of textfields
+			// ---------------------------------------------------------------------
 			array(
 				'field_id'		=> 'title',
 				'field_name'	=> 'title',
 				'field_label'	=> __( 'Title', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, this widget will show the calendar name in your sidebar box title', 'icalevents' ),
 				'field_type'	=> 'text',
+				'field_css'		=> 'widefat',
 				'field_value'	=> $title
 			),
 			array(
@@ -110,6 +130,7 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'iCalendar Subscription URL', 'icalevents' ),
 				'field_title'	=> __( 'Enter a full qualified URL to a iCalendar subscription. It *MUST* start with \'http://\' or \'webcal://\'. ', 'icalevents' ),
 				'field_type'	=> 'text',
+				'field_css'		=> 'widefat',
 				'field_value'	=> $iCalURI
 			),
 			array(
@@ -118,14 +139,38 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show # of upcoming events', 'icalevents' ),
 				'field_title'	=> __( 'Enter a numeric value here. It represents the number of the events that will be shown in your sidebar box.', 'icalevents' ),
 				'field_type'	=> 'text',
+				'field_css'		=> 'widefat',
 				'field_value'	=> $showNrOfEvents
 			),
+			array(
+				'field_id'		=> 'showEventRangeDateFrom',
+				'field_name'	=> 'showEventRangeDateFrom',
+				'field_label'	=> __( 'Show events from this date', 'icalevents' ),
+				'field_title'	=> __( 'If you leave this setting empty, the current date will be used.', 'icalevents' ),
+				'field_type'	=> 'text',
+				'field_css'		=> 'rangeDateFrom',
+				'field_value'	=> $showEventRangeDateFrom
+			),
+			array(
+				'field_id'		=> 'showEventRangeDateTo',
+				'field_name'	=> 'showEventRangeDateTo',
+				'field_label'	=> __( 'Show events to this date', 'icalevents' ),
+				'field_title'	=> __( 'If you leave this setting empty, the 2038/12/31 will be used as the maximum date.', 'icalevents' ),
+				'field_type'	=> 'text',
+				'field_css'		=> 'rangeDateTo',
+				'field_value'	=> $showEventRangeDateTo
+			),
+			
+			// ---------------------------------------------------------------------
+			// list of checkboxes
+			// ---------------------------------------------------------------------
 			array(
 				'field_id'		=> 'showEventSummary',
 				'field_name'	=> 'showEventSummary',
 				'field_label'	=> __( 'Show event summary', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventSummary
 			),
 			array(
@@ -134,15 +179,8 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show start date', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventDateStart
-			),
-			array(
-				'field_id'		=> 'showEventDateEnd',
-				'field_name'	=> 'showEventDateEnd',
-				'field_label'	=> __( 'Show end date', 'icalevents' ),
-				'field_title'	=> __( '', 'icalevents' ),
-				'field_type'	=> 'checkbox',
-				'field_value'	=> $showEventDateEnd
 			),
 			array(
 				'field_id'		=> 'showEventTimeStart',
@@ -150,7 +188,17 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show start time', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventTimeStart
+			),
+			array(
+				'field_id'		=> 'showEventDateEnd',
+				'field_name'	=> 'showEventDateEnd',
+				'field_label'	=> __( 'Show end date', 'icalevents' ),
+				'field_title'	=> __( '', 'icalevents' ),
+				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
+				'field_value'	=> $showEventDateEnd
 			),
 			array(
 				'field_id'		=> 'showEventTimeEnd',
@@ -158,6 +206,7 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show end time', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventTimeEnd
 			),
 			array(
@@ -166,6 +215,7 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show description', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventDescription
 			),
 			array(
@@ -174,6 +224,7 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show location', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventLocation
 			),
 			array(
@@ -182,6 +233,7 @@ class iCalEvents extends WP_Widget {
 				'field_label'	=> __( 'Show a given URL', 'icalevents' ),
 				'field_title'	=> __( '', 'icalevents' ),
 				'field_type'	=> 'checkbox',
+				'field_css'		=> '',
 				'field_value'	=> $showEventURL
 			),
 		);
@@ -189,13 +241,23 @@ class iCalEvents extends WP_Widget {
 		$closePTag = true;
 		foreach($widgetOptions as $option) {
 			switch ($option['field_type']) {
+				case 'hidden':
+					$hiddenFieldTemplate = new TemplateFromFile( $this->templatePath.'admin_option_hiddenfield.tpl' );
+					$hiddenFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',			$option['field_id'] );
+					$hiddenFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_NAME',		$option['field_name'] );
+					$hiddenFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_VALUE',		$option['field_value'] );
+					$hiddenFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_FIELD_TYPE',	$option['field_type'] );
+					$hiddenFieldTemplate->show();
+				break;
+
 				case 'checkbox':
 					$checkBoxTemplate = new TemplateFromFile( $this->templatePath.'admin_option_checkbox.tpl' );
 					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',				$this->get_field_id( $option['field_id'] ) );
 					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_NAME',			$this->get_field_name( $option['field_name'] ) );
 					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_VALUE',			$option['field_value'] );
 					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_LABEL',			$option['field_label'] );
-					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_LABEL',			$option['field_title'] );
+					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_TITLE',			$option['field_title'] );
+					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_CSS_CLASS',		$option['field_css'] );
 					$checkBoxTemplate->replaceTokenByContent( 'OPTION_ITEM_CHECKED_FLAG',	($option['field_value'] ? 'checked="checked"' : '') );
 
 					if ($closePTag) print('<p>');
@@ -206,11 +268,13 @@ class iCalEvents extends WP_Widget {
 				case 'text':
 				default:
 					$textFieldTemplate = new TemplateFromFile( $this->templatePath.'admin_option_textfield.tpl' );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',		$this->get_field_id( $option['field_id'] ) );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_NAME',		$this->get_field_name( $option['field_name'] ) );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_VALUE',		$option['field_value'] );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_LABEL',		$option['field_label'] );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_TITLE',		$option['field_title'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',			$this->get_field_id( $option['field_id'] ) );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_NAME',			$this->get_field_name( $option['field_name'] ) );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_VALUE',			$option['field_value'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_LABEL',			$option['field_label'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_TITLE',			$option['field_title'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_CSS_CLASS',		$option['field_css'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_FIELD_TYPE',	$option['field_type'] );
 
 					if (!$closePTag) print('</p>');		// switch from checkbox to textfield
 					print('<p>');
@@ -230,6 +294,8 @@ class iCalEvents extends WP_Widget {
 		$instance['title']					= strip_tags($new_instance['title']);
 		$instance['iCalURI']				= strip_tags($new_instance['iCalURI']);
 		$instance['showNrOfEvents']			= strip_tags($new_instance['showNrOfEvents']);
+		$instance['showEventRangeDateFrom']	= strip_tags($new_instance['showEventRangeDateFrom']);
+		$instance['showEventRangeDateTo']	= strip_tags($new_instance['showEventRangeDateTo']);
 		$instance['showEventDateStart']		= strip_tags($new_instance['showEventDateStart']);
 		$instance['showEventDateEnd']		= strip_tags($new_instance['showEventDateEnd']);
 		$instance['showEventTimeStart']		= strip_tags($new_instance['showEventTimeStart']);
@@ -249,6 +315,8 @@ class iCalEvents extends WP_Widget {
 		$title					= trim(apply_filters( 'widget_title', $instance['title'] ));
 		$iCalURI				= trim($instance['iCalURI']);
 		$showNrOfEvents			= $instance['showNrOfEvents'];
+		$showEventRangeDateFrom	= $instance['showEventRangeDateFrom'];
+		$showEventRangeDateTo	= $instance['showEventRangeDateTo'];
 		$showEventDateStart		= $instance['showEventDateStart'];
 		$showEventDateEnd		= $instance['showEventDateEnd'];
 		$showEventTimeStart		= $instance['showEventTimeStart'];
@@ -262,13 +330,20 @@ class iCalEvents extends WP_Widget {
 		$iCalURI = str_ireplace ( 'webcal:' , 'http:' , $instance['iCalURI'] );
 
 		$iCal = new ical($iCalURI);
-		$currentDate = new DateTime('2038/12/31');
-		$iCalEvents = $iCal->events();
-/*
-		$rangeFrom = new DateTime('2011/09/01');
-		$rangeTo = new DateTime('2011/09/30');
-		$iCalEvents = $iCal->eventsFromRange( $rangeFrom, $rangeTo );
-*/
+		
+		if (!$showEventRangeDateFrom)
+			$showEventRangeDateFrom = new DateTime();
+		else
+			$showEventRangeDateFrom = new DateTime($showEventRangeDateFrom);
+			
+		if (!$showEventRangeDateTo)
+			$showEventRangeDateTo = new DateTime('2038/12/31');
+		else
+			$showEventRangeDateTo = new DateTime($showEventRangeDateTo);
+			
+
+		$iCalEvents = $iCal->eventsFromRange( $showEventRangeDateFrom, $showEventRangeDateTo );
+
 
 		// if the title for this event list is not given
 		// by the options, so set the widget title to iCal name
