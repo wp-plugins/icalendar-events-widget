@@ -51,9 +51,9 @@ n/a
 
 == Changelog ==
 
-* = 0.1.0 =
+= 0.1.0 =
     * The very first version.
-* = 0.2.0 =
+= 0.2.0 =
     * added some very basic functionality for selecting a date range
     * minor bugfixes
 
