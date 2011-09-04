@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iCalEvents\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-02 00:54+0100\n"
-"PO-Revision-Date: 2011-09-02 23:55+0100\n"
+"POT-Creation-Date: 2011-09-05 01:25+0100\n"
+"PO-Revision-Date: 2011-09-05 01:30+0100\n"
 "Last-Translator: Frank Gregor <phranck@programmschmie.de>\n"
 "Language-Team: [programmschmie.de] <software@programmschmie.de>\n"
 "MIME-Version: 1.0\n"
@@ -14,73 +14,93 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-SearchPath-0: /Volumes/NetPool/iCalEvents\n"
+"X-Poedit-SearchPath-0: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget\n"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:61
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:87
 msgid "Shows you upcoming events for a configurable iCalendar .ics file."
 msgstr "Zeigt aus einem abonnierbaren iCal Kalender die nächsten Termine an."
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:82
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:111
 msgid "iCalendar Events"
 msgstr "iCalendar Events"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:100
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:135
 msgid "Title"
 msgstr "Titel"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:101
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:136
 msgid "If you leave this setting empty, this widget will show the calendar name in your sidebar box title"
-msgstr "Wenn diese Einstellung leer gelassen wird, dann zeigt das Widget automatisch den Namen des abonnierten Kalenders an."
+msgstr "Wenn diese Einstellung leer gelassen wird, dann zeigt das Widget auf der Benutzer-Website automatisch den Namen des abonnierten Kalenders an."
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:108
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:143
 msgid "iCalendar Subscription URL"
 msgstr "URL des Kalender"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:109
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:144
 msgid "Enter a full qualified URL to a iCalendar subscription. It *MUST* start with 'http://' or 'webcal://'. "
 msgstr "Bitte gibt hier einen vollständigen URL des zu abonnierenden Kalenders an. Diese MUSS mit 'http://' oder 'webcal://' beginnen."
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:116
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:152
 msgid "Show # of upcoming events"
 msgstr "Zeige # nächste Termine"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:117
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:153
 msgid "Enter a numeric value here. It represents the number of the events that will be shown in your sidebar box."
 msgstr "Bitte gib hier einen numerischen Wert ein. Er bestimmt die Anzahl der Termine, welche in der Sidebar angezeigt werden."
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:124
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:161
+msgid "Events from this date <small>(YYYY-MM-DD)</small>"
+msgstr "Termine ab diesem Datum <small>(YYYY-MM-DD)</small>"
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:162
+msgid "If you leave this setting empty, the current date will be used."
+msgstr "Wenn Sie diese Einstellung leer lassen, dann wird das aktuelle Datum verwendet."
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:170
+msgid "Events to this date <small>(YYYY-MM-DD)</small>"
+msgstr "Termine bis zu diesem Datum <small>(YYYY-MM-DD)</small>"
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:171
+msgid "If you leave this setting empty, the 2038/12/31 will be used as the maximum date."
+msgstr "Wenn Sie diese Einstellung leer lassen, dann wird der 31.12.2038 als höchstes Datum verwendet."
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:183
 msgid "Show event summary"
 msgstr "Zeige Termin Thema"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:132
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:192
 msgid "Show start date"
 msgstr "Zeige Start-Datum"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:140
-msgid "Show end date"
-msgstr "Zeige End-Datum"
-
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:148
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:201
 msgid "Show start time"
 msgstr "Zeige Start-Zeit"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:156
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:210
+msgid "Show end date"
+msgstr "Zeige End-Datum"
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:219
 msgid "Show end time"
 msgstr "Zeige End-Zeit"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:164
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:228
 msgid "Show description"
 msgstr "Zeige Beschreibung"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:172
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:237
 msgid "Show location"
 msgstr "Zeige Veranstaltungsort"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:180
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:246
 msgid "Show a given URL"
 msgstr "Zeige URL"
 
-#: /Volumes/NetPool/iCalEvents/iCalEvents.php:281
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:304
+msgid "This is NOT a valid date format!"
+msgstr "Kein gültiges Datums-Format!"
+
+#: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:417
 msgid "There are no events available."
 msgstr "Momentan gibt es keine Termine."
 

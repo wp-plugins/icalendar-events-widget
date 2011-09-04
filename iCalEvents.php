@@ -2,15 +2,13 @@
 /*
 	Plugin Name: iCalendar Events Widget
 	Plugin Script: iCalEvents.php
-	Plugin URI: http://programmschmie.de/software/web/iCalEvents/
+	Plugin URI: http://programmschmie.de/icalevents/
 	Description: Shows you upcoming events for a configurable iCalendar .ics file. You can also set a range of dates.
-	Version: 0.2.0
+	Version: 0.3.0
 	Author: [programmschmie.de]
 	Author URI: http://programmschmie.de
 	Text Domain: icalevents
-	Domain Path: /languages
-	
-	http://www.eyecon.ro/datepicker/#about
+	Domain Path: /languages/
 	
 	$Id$
 */
@@ -41,6 +39,7 @@ class iCalEvents extends WP_Widget {
 	private /** @type {string} */ $libPath;
 	private /** @type {string} */ $templatePath;
 	private /** @type {string} */ $languagePath;
+	private /** @type {string} */ $imagePath;
 	private /** @type {string} */ $cssPath;
 	private /** @type {string} */ $javaScriptPath;
     
@@ -50,6 +49,7 @@ class iCalEvents extends WP_Widget {
 		$this->libPath			= $this->widgetFilePath.'/lib/';
 		$this->templatePath		= $this->widgetFilePath.'/templates/';
 		$this->languagePath		= $this->widgetFilePath.'/languages/';
+		$this->imagePath		= $this->widgetFilePath.'/images/';
 		$this->cssPath			= basename(dirname(__FILE__)).'/css/';
 		$this->javaScriptPath	= basename(dirname(__FILE__)).'/js/';
 	    
@@ -61,21 +61,35 @@ class iCalEvents extends WP_Widget {
 	    if (!file_exists( $this->libPath.'class.Template.php' )) return false;
 	    require_once( $this->libPath.'class.Template.php' );
 
+		// widgets own javascript files
+		wp_enqueue_script('jquery');
+		wp_enqueue_script('jquery-ui-core');
+
+	    wp_register_script('jquery-ui-datepicker', plugins_url($this->javaScriptPath.'jquery.ui.datepicker.min.js'), false, ICALEVENTS_VERSION);
+	    wp_enqueue_script('jquery-ui-datepicker');
+		
+	    wp_register_script('iCalendarJS', plugins_url($this->javaScriptPath.'icalendar.js'), false, ICALEVENTS_VERSION);
+	    wp_enqueue_script('iCalendarJS');
+		
+	    wp_register_script('DateJS', plugins_url($this->javaScriptPath.'date.js'), false, ICALEVENTS_VERSION);
+	    wp_enqueue_script('DateJS');
+
 		// widgets own css styles
+	    wp_register_style('jquery-ui-theme', plugins_url($this->javaScriptPath.'custom-theme/jquery-ui-1.8.16.custom.css'), array(), ICALEVENTS_VERSION, 'screen');
+	    wp_enqueue_style('jquery-ui-theme');
+
+	    wp_register_style('ui-datepicker', plugins_url($this->cssPath.'ui.datepicker.css'), array(), ICALEVENTS_VERSION, 'screen');
+	    wp_enqueue_style('ui-datepicker');
+
 	    wp_register_style('iCalendarCSS', plugins_url($this->cssPath.'icalendar.css'), array(), ICALEVENTS_VERSION, 'screen');
 	    wp_enqueue_style('iCalendarCSS');
 
-		// widgets own javascript files
-	    wp_register_script('iCalendarJS', plugins_url($this->javaScriptPath.'icalendar.js'), false, ICALEVENTS_VERSION);
-	    wp_enqueue_script('iCalendarJS');
-	    
-	    // the date picker stuff
-
 		$widget_ops = array('classname' => __CLASS__, 'description' => __('Shows you upcoming events for a configurable iCalendar .ics file.', 'icalevents'));
-		parent::WP_Widget(__CLASS__, 'iCalEvents', $widget_ops);
+		parent::WP_Widget(__CLASS__, 'iCalendar Events', $widget_ops);
     }
 
     function form( $instance ) {
+	    
         // setting up stored values for all widget options
         if ( $instance ) {
 			$title					= esc_attr( $instance[ 'title' ] );
@@ -122,8 +136,7 @@ class iCalEvents extends WP_Widget {
 				'field_title'	=> __( 'If you leave this setting empty, this widget will show the calendar name in your sidebar box title', 'icalevents' ),
 				'field_type'	=> 'text',
 				'field_css'		=> 'widefat',
-				'field_value'	=> $title
-			),
+				'field_value'	=> $title			),
 			array(
 				'field_id'		=> 'iCalURI',
 				'field_name'	=> 'iCalURI',
@@ -131,7 +144,7 @@ class iCalEvents extends WP_Widget {
 				'field_title'	=> __( 'Enter a full qualified URL to a iCalendar subscription. It *MUST* start with \'http://\' or \'webcal://\'. ', 'icalevents' ),
 				'field_type'	=> 'text',
 				'field_css'		=> 'widefat',
-				'field_value'	=> $iCalURI
+				'field_value'	=> $iCalURI,
 			),
 			array(
 				'field_id'		=> 'showNrOfEvents',
@@ -145,18 +158,18 @@ class iCalEvents extends WP_Widget {
 			array(
 				'field_id'		=> 'showEventRangeDateFrom',
 				'field_name'	=> 'showEventRangeDateFrom',
-				'field_label'	=> __( 'Show events from this date', 'icalevents' ),
+				'field_label'	=> __( 'Events from this date <small>(YYYY-MM-DD)</small>', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, the current date will be used.', 'icalevents' ),
-				'field_type'	=> 'text',
+				'field_type'	=> 'datepicker',
 				'field_css'		=> 'rangeDateFrom',
 				'field_value'	=> $showEventRangeDateFrom
 			),
 			array(
 				'field_id'		=> 'showEventRangeDateTo',
 				'field_name'	=> 'showEventRangeDateTo',
-				'field_label'	=> __( 'Show events to this date', 'icalevents' ),
+				'field_label'	=> __( 'Events to this date <small>(YYYY-MM-DD)</small>', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, the 2038/12/31 will be used as the maximum date.', 'icalevents' ),
-				'field_type'	=> 'text',
+				'field_type'	=> 'datepicker',
 				'field_css'		=> 'rangeDateTo',
 				'field_value'	=> $showEventRangeDateTo
 			),
@@ -266,6 +279,7 @@ class iCalEvents extends WP_Widget {
 				break;
 				
 				case 'text':
+				case 'datepicker':
 				default:
 					$textFieldTemplate = new TemplateFromFile( $this->templatePath.'admin_option_textfield.tpl' );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',			$this->get_field_id( $option['field_id'] ) );
@@ -274,10 +288,49 @@ class iCalEvents extends WP_Widget {
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_LABEL',			$option['field_label'] );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_TITLE',			$option['field_title'] );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_CSS_CLASS',		$option['field_css'] );
-					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_FIELD_TYPE',	$option['field_type'] );
+					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_FIELD_TYPE',	'text' );
 
 					if (!$closePTag) print('</p>');		// switch from checkbox to textfield
 					print('<p>');
+					
+					// if we have a datepicker
+					// there are a few more things to do
+					if ($option['field_type'] == 'datepicker') {
+						
+						// get a message template if we need it for an error
+						$errorMessageTemplate = new TemplateFromFile( $this->templatePath.'admin_option_message.tpl' );
+						$errorMessageTemplate->replaceTokenByContent( 'OPTION_ITEM_ID', $this->get_field_id( $option['field_id'] ).'_errorMessage' );
+						$errorMessageTemplate->replaceTokenByContent( 'OPTION_ITEM_CSS_CLASS', 'icaleventsErrorMessage' );
+						$errorMessageTemplate->replaceTokenByContent( 'OPTION_ITEM_ERRORMESSAGE',__( 'This is NOT a valid date format!', 'icalevents' ) );
+						
+						print('
+			<script>
+				jQuery(document).ready(function(){
+					jQuery("#'.$this->get_field_id( $option['field_id'] ).'")
+					.datepicker({
+						dateFormat: "yy-mm-dd",
+						showWeek: true,
+						firstDay: 1,
+						showOn: "button",
+						buttonImage: "'.plugins_url(basename(dirname(__FILE__))).'/images/calendar_icon.gif",
+						buttonImageOnly: true
+					})
+					.change(function() {
+						var parsedDate = Date.parse( jQuery(this).val() );
+						if ( parsedDate == null && jQuery(this).val() != "" ) {
+							/*jQuery(this).before(\''.$errorMessageTemplate->get().'\');*/
+							jQuery("#'.$this->get_field_id( $option['field_id'] ).'_errorMessage").fadeIn().delay(3000);
+							jQuery(this).focus();
+							jQuery("#'.$this->get_field_id( $option['field_id'] ).'_errorMessage").fadeOut();
+						} else {
+							jQuery("#'.$this->get_field_id( $option['field_id'] ).'_errorMessage").fadeOut();
+						}
+					});
+				});
+			</script>
+						');
+						$errorMessageTemplate->show();
+					}
 					$textFieldTemplate->show();
 					$closePTag = true;
 				break;
