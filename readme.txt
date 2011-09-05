@@ -35,8 +35,8 @@ This widget shows you upcoming events for a configurable iCalendar .ics file. Th
 This section describes how to install the plugin and get it working.
 
 1. Upload the complete 'icalendar-events-widget/' directory to '/wp-content/plugins/' directory of your active theme
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to the 'Widgets' menue in WordPress and put it on the right place of your sidebar
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Go to the 'Widgets' menue in WordPress and put it on the right place of your sidebar
 
 
 == Frequently Asked Questions ==
@@ -79,9 +79,9 @@ http://downloads.wordpress.org/plugin/icalendar-events-widget.zip
 
 This widget makes (in some topics partially) use of:
 
-* the [ics-parser](http://code.google.com/p/ics-parser/) class by [Martin Thoma](http://martin-thoma.de)
-* the [jQuery UI-Datepicker plugin](http://jqueryui.com/demos/datepicker/)
-* the [DateJS - Javascript Date Library](http://www.datejs.com/)
+- the [ics-parser](http://code.google.com/p/ics-parser/) class by [Martin Thoma](http://martin-thoma.de)
+- the [jQuery UI-Datepicker plugin](http://jqueryui.com/demos/datepicker/)
+- the [DateJS - Javascript Date Library](http://www.datejs.com/)
 
 = Good to know =
 Normally you will select a "range date-to" greater than the "range date-from". But, if you set the "range date-to" lesser than the "range date-from" 
