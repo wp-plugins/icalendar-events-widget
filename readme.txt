@@ -79,9 +79,9 @@ http://downloads.wordpress.org/plugin/icalendar-events-widget.zip
 
 This widget makes (in some topics partially) use of:
 
-	* the [ics-parser](http://code.google.com/p/ics-parser/) class by [Martin Thoma](http://martin-thoma.de)
-	* the [jQuery UI-Datepicker plugin](http://jqueryui.com/demos/datepicker/)
-	* the [DateJS - Javascript Date Library](http://www.datejs.com/)
+* the [ics-parser](http://code.google.com/p/ics-parser/) class by [Martin Thoma](http://martin-thoma.de)
+* the [jQuery UI-Datepicker plugin](http://jqueryui.com/demos/datepicker/)
+* the [DateJS - Javascript Date Library](http://www.datejs.com/)
 
 = Good to know =
 Normally you will select a "range date-to" greater than the "range date-from". But, if you set the "range date-to" lesser than the "range date-from" 
