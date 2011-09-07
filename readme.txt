@@ -54,20 +54,17 @@ n/a
 == Changelog ==
 
 = 0.1.0 =
-    * The very first version.
+* The very first version.
 
 = 0.2.0 =
-    * added some very basic functionality for selecting a date range
-    * minor bugfixes
+* added some very basic functionality for selecting a date range
+* minor bugfixes
 
 = 0.3.0 =
-	* added a datepicker for the date range input
-	* locale support for dates
-	* documentation updated
-	* translations updated
-
-= 0.3.1 =
-	* fixed some issues with PHP 5.3.x
+* added a datepicker for the date range input
+* locale support for dates
+* documentation updated
+* translations updated
 	
 	
 

@@ -46,7 +46,7 @@ class iCalEvents extends WP_Widget {
 		$this->widgetFilePath	= dirname(__FILE__);
 		$this->libPath			= $this->widgetFilePath.'/lib/';
 		$this->templatePath		= $this->widgetFilePath.'/templates/';
-		$this->languagePath		= $this->widgetFilePath.'/languages';
+		$this->languagePath		= 'languages/';
 		$this->imagePath		= $this->widgetFilePath.'/images/';
 		$this->cssPath			= basename(dirname(__FILE__)).'/css/';
 		$this->javaScriptPath	= basename(dirname(__FILE__)).'/js/';
