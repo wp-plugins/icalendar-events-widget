@@ -204,18 +204,23 @@ class iCal {
      *
      * @return {mixed}
      */
-    public function eventsFromRange( $rangeStart = false, $rangeEnd = false ) {
+   public function eventsFromRange( $rangeStart = false, $rangeEnd = false ) {
 		$events = $this->sortEventsWithOrder( $this->events(), SORT_ASC );
-    	// there are no events
-    	if (!$events)
-    		return false;
-
-		$extendedEvents = array();
+	   	// there are no events
+	   	if (!$events)
+	   		return false;
 		
-		if (!$rangeStart)
-			$rangeStart = new DateTime();
-		if (!$rangeEnd)
-			$rangeEnd = new DateTime('2038/12/31');
+		$extendedEvents = array();
+
+		if ($rangeStart !== false)
+			$rangeStart = new DateTime($rangeStart);
+		
+		if ($rangeEnd !== false) {
+			if ($rangeEnd == '')
+				$rangeEnd = new DateTime('2038/12/31');
+			else
+				$rangeEnd = new DateTime($rangeEnd);
+		}
 
 		$rangeStart = $rangeStart->format('U');
 		$rangeEnd = $rangeEnd->format('U');
@@ -228,7 +233,7 @@ class iCal {
 		}
 
 		return $extendedEvents;
-    }
+   }
 
     /**
      * Returns a boolean value whether thr current calendar has events or not

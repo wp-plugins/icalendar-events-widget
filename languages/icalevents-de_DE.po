@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iCalEvents\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-07 17:34+0100\n"
-"PO-Revision-Date: 2011-09-07 17:34+0100\n"
+"POT-Creation-Date: 2011-09-07 18:03+0100\n"
+"PO-Revision-Date: 2011-09-07 18:03+0100\n"
 "Last-Translator: Frank Gregor <phranck@programmschmie.de>\n"
 "Language-Team: [programmschmie.de] <software@programmschmie.de>\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgstr "Bitte gib hier einen numerischen Wert ein. Er bestimmt die Anzahl der Te
 
 #: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:161
 msgid "Select a date range here. The format of the given date must be \"YYYY/MM/DD\"."
-msgstr "Bitte wählen Sie eine Zeitspanne aus. Das Datumsformat für die Eingabe muss \"JJJ/MM/TT\" sein."
+msgstr "Bitte wählen Sie eine Zeitspanne aus. Das Datumsformat für die Eingabe muss \"JJJJ/MM/TT\" sein."
 
 #: /Users/dps/Projekte/Web/WordPress/icalendar-events-widget/iCalEvents.php:166
 msgid "Show Events from"
@@ -108,8 +108,8 @@ msgstr "Kein gültiges Datums-Format!"
 msgid "There are no events available."
 msgstr "Momentan gibt es keine Termine."
 
-msgid "Events from this date <small>(YYYY-MM-DD)</small>"
-msgstr "Termine ab diesem Datum <small>(YYYY-MM-DD)</small>"
+#~ msgid "Events from this date <small>(YYYY-MM-DD)</small>"
+#~ msgstr "Termine ab diesem Datum <small>(YYYY-MM-DD)</small>"
 
-msgid "Events to this date <small>(YYYY-MM-DD)</small>"
-msgstr "Termine bis zu diesem Datum <small>(YYYY-MM-DD)</small>"
+#~ msgid "Events to this date <small>(YYYY-MM-DD)</small>"
+#~ msgstr "Termine bis zu diesem Datum <small>(YYYY-MM-DD)</small>"
