@@ -68,6 +68,9 @@ n/a
 
 = 0.3.1 =
 * fixed some issues with php 5.3.x
+
+= 0.3.2 =
+* fixed a translation issue
 	
 	
 
