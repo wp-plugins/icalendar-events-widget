@@ -202,9 +202,14 @@ class iCal {
     /**
      * Returns a boolean value whether thr current calendar has events or not
      *
-     * @return {boolean}
+     * @return {mixed}
      */
     public function eventsFromRange( $rangeStart = false, $rangeEnd = false ) {
+		$events = $this->sortEventsWithOrder( $this->events(), SORT_ASC );
+    	// there are no events
+    	if (!$events)
+    		return false;
+
 		$extendedEvents = array();
 		
 		if (!$rangeStart)
@@ -214,8 +219,6 @@ class iCal {
 
 		$rangeStart = $rangeStart->format('U');
 		$rangeEnd = $rangeEnd->format('U');
-
-		$events = $this->sortEventsWithOrder( $this->events(), SORT_ASC );
 
 		// loop through all events by adding two new elements
 		foreach( $events as $anEvent ) {
@@ -230,9 +233,13 @@ class iCal {
     /**
      * Returns a boolean value whether thr current calendar has events or not
      *
-     * @return {boolean}
+     * @return {mixed}
      */
     public function sortEventsWithOrder( $events, $sortOrder = SORT_ASC ) {
+    	// there are no events
+    	if (!$events)
+    		return false;
+    
 		$extendedEvents = array();
 		
 		// loop through all events by adding two new elements

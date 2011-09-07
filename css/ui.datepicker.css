@@ -16,3 +16,11 @@ img.ui-datepicker-trigger {
 	display: none;
 	text-align: center;
 }
+
+.datepickerLabel {
+	display: inline;
+}
+.rangeDateFrom,
+.rangeDateTo {
+	width: 41%;
+}

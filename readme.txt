@@ -65,6 +65,10 @@ n/a
 	* locale support for dates
 	* documentation updated
 	* translations updated
+
+= 0.3.1 =
+	* fixed some issues with PHP 5.3.x
+	
 	
 
 == Upgrade Notice ==

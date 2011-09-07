@@ -76,7 +76,8 @@ class Template
      */
 	function replaceTokenByContent( $token, $content) {
 		$template = $this->_tpl_out;												// buffered template uebergeben
-		$template = eregi_replace("{". $token ."}", "$content", "$template");		// token ersetzen
+
+		$template = preg_replace( "/{". $token ."}/", "$content", "$template" );
 		$this->_tpl_out = $template;												// und template zurueck
 	}
 

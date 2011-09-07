@@ -24,6 +24,13 @@
 */
 
 
+
+/*
+	-----------------------------------------------------------------------
+	User Frontend
+	-----------------------------------------------------------------------
+*/
+
 /* the event list */
 ul.iCalEvents {
 	display: block;
@@ -85,3 +92,23 @@ ul.iCalEvents li.iCalEventsItem .eventListItemURL {
 	letter-spacing: 1.1pt;
 }
 
+
+
+
+/*
+	-----------------------------------------------------------------------
+	Widget Options in WP Admin
+	-----------------------------------------------------------------------
+*/
+
+.datepickerLabel {
+	margin-left: 5px;
+}
+
+hr.horizontalRule {
+	margin: 0;
+	padding: 0
+	height: 2px;
+	border: none;
+	border-top: 1px solid #ddd;
+}

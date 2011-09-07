@@ -33,8 +33,6 @@
 define('ICALEVENTS_VERSION', '0.2.0');
 
 class iCalEvents extends WP_Widget {
-	private $newline = "\n";
-	
 	private	/** @type {string} */ $widgetFilePath;
 	private /** @type {string} */ $libPath;
 	private /** @type {string} */ $templatePath;
@@ -48,7 +46,7 @@ class iCalEvents extends WP_Widget {
 		$this->widgetFilePath	= dirname(__FILE__);
 		$this->libPath			= $this->widgetFilePath.'/lib/';
 		$this->templatePath		= $this->widgetFilePath.'/templates/';
-		$this->languagePath		= $this->widgetFilePath.'/languages/';
+		$this->languagePath		= $this->widgetFilePath.'/languages';
 		$this->imagePath		= $this->widgetFilePath.'/images/';
 		$this->cssPath			= basename(dirname(__FILE__)).'/css/';
 		$this->javaScriptPath	= basename(dirname(__FILE__)).'/js/';
@@ -134,7 +132,7 @@ class iCalEvents extends WP_Widget {
 				'field_name'	=> 'title',
 				'field_label'	=> __( 'Title', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, this widget will show the calendar name in your sidebar box title', 'icalevents' ),
-				'field_type'	=> 'text',
+				'field_type'	=> 'textfield',
 				'field_css'		=> 'widefat',
 				'field_value'	=> $title			),
 			array(
@@ -142,7 +140,7 @@ class iCalEvents extends WP_Widget {
 				'field_name'	=> 'iCalURI',
 				'field_label'	=> __( 'iCalendar Subscription URL', 'icalevents' ),
 				'field_title'	=> __( 'Enter a full qualified URL to a iCalendar subscription. It *MUST* start with \'http://\' or \'webcal://\'. ', 'icalevents' ),
-				'field_type'	=> 'text',
+				'field_type'	=> 'textfield',
 				'field_css'		=> 'widefat',
 				'field_value'	=> $iCalURI,
 			),
@@ -151,14 +149,21 @@ class iCalEvents extends WP_Widget {
 				'field_name'	=> 'showNrOfEvents',
 				'field_label'	=> __( 'Show # of upcoming events', 'icalevents' ),
 				'field_title'	=> __( 'Enter a numeric value here. It represents the number of the events that will be shown in your sidebar box.', 'icalevents' ),
-				'field_type'	=> 'text',
+				'field_type'	=> 'textfield',
 				'field_css'		=> 'widefat',
 				'field_value'	=> $showNrOfEvents
 			),
 			array(
+				'field_type'	=> 'separator'
+			),
+			array(
+				'field_type'	=> 'note',
+				'field_value'	=> __( 'Select a date range here. The format of the given date must be "YYYY/MM/DD".', 'icalevents' )
+			),
+			array(
 				'field_id'		=> 'showEventRangeDateFrom',
 				'field_name'	=> 'showEventRangeDateFrom',
-				'field_label'	=> __( 'Events from this date <small>(YYYY-MM-DD)</small>', 'icalevents' ),
+				'field_label'	=> __( 'Show Events from', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, the current date will be used.', 'icalevents' ),
 				'field_type'	=> 'datepicker',
 				'field_css'		=> 'rangeDateFrom',
@@ -167,11 +172,14 @@ class iCalEvents extends WP_Widget {
 			array(
 				'field_id'		=> 'showEventRangeDateTo',
 				'field_name'	=> 'showEventRangeDateTo',
-				'field_label'	=> __( 'Events to this date <small>(YYYY-MM-DD)</small>', 'icalevents' ),
+				'field_label'	=> __( 'Show Events to', 'icalevents' ),
 				'field_title'	=> __( 'If you leave this setting empty, the 2038/12/31 will be used as the maximum date.', 'icalevents' ),
 				'field_type'	=> 'datepicker',
 				'field_css'		=> 'rangeDateTo',
 				'field_value'	=> $showEventRangeDateTo
+			),
+			array(
+				'field_type'	=> 'separator'
 			),
 			
 			// ---------------------------------------------------------------------
@@ -262,6 +270,14 @@ class iCalEvents extends WP_Widget {
 					$hiddenFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_FIELD_TYPE',	$option['field_type'] );
 					$hiddenFieldTemplate->show();
 				break;
+				
+				case 'separator':
+					print('<hr class="horizontalRule"/>');
+				break;
+				
+				case 'note':
+					print('<div class="icaleventsNote">'.$option['field_value'].'</div>');
+				break;
 
 				case 'checkbox':
 					$checkBoxTemplate = new TemplateFromFile( $this->templatePath.'admin_option_checkbox.tpl' );
@@ -278,10 +294,10 @@ class iCalEvents extends WP_Widget {
 					$closePTag = false;
 				break;
 				
-				case 'text':
+				case 'textfield':
 				case 'datepicker':
 				default:
-					$textFieldTemplate = new TemplateFromFile( $this->templatePath.'admin_option_textfield.tpl' );
+					$textFieldTemplate = new TemplateFromFile( $this->templatePath.'admin_option_'.$option['field_type'].'.tpl' );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_ID',			$this->get_field_id( $option['field_id'] ) );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_NAME',			$this->get_field_name( $option['field_name'] ) );
 					$textFieldTemplate->replaceTokenByContent( 'OPTION_ITEM_VALUE',			$option['field_value'] );
@@ -318,7 +334,6 @@ class iCalEvents extends WP_Widget {
 					.change(function() {
 						var parsedDate = Date.parse( jQuery(this).val() );
 						if ( parsedDate == null && jQuery(this).val() != "" ) {
-							/*jQuery(this).before(\''.$errorMessageTemplate->get().'\');*/
 							jQuery("#'.$this->get_field_id( $option['field_id'] ).'_errorMessage").fadeIn().delay(3000);
 							jQuery(this).focus();
 							jQuery("#'.$this->get_field_id( $option['field_id'] ).'_errorMessage").fadeOut();
@@ -344,6 +359,7 @@ class iCalEvents extends WP_Widget {
     function update( $new_instance, $old_instance ) {
         // processes widget options to be saved
         $instance = $old_instance;
+		$instance['widgetIsParkedState']	= strip_tags($new_instance['widgetIsParkedState']);
 		$instance['title']					= strip_tags($new_instance['title']);
 		$instance['iCalURI']				= strip_tags($new_instance['iCalURI']);
 		$instance['showNrOfEvents']			= strip_tags($new_instance['showNrOfEvents']);
@@ -362,6 +378,7 @@ class iCalEvents extends WP_Widget {
 
 
     function widget( $args, $instance ) {
+
         // outputs the content of the widget
         // ADD YOUR FRONT-END FORM HERE
         extract( $args );
@@ -383,7 +400,11 @@ class iCalEvents extends WP_Widget {
 		$iCalURI = str_ireplace ( 'webcal:' , 'http:' , $instance['iCalURI'] );
 
 		$iCal = new ical($iCalURI);
-		
+		$iCalEvents = $iCal->eventsFromRange( $showEventRangeDateFrom, $showEventRangeDateTo );
+		if (!$iCalEvents)
+			return false;
+
+
 		if (!$showEventRangeDateFrom)
 			$showEventRangeDateFrom = new DateTime();
 		else
@@ -394,8 +415,6 @@ class iCalEvents extends WP_Widget {
 		else
 			$showEventRangeDateTo = new DateTime($showEventRangeDateTo);
 			
-
-		$iCalEvents = $iCal->eventsFromRange( $showEventRangeDateFrom, $showEventRangeDateTo );
 
 
 		// if the title for this event list is not given
@@ -478,7 +497,7 @@ class iCalEvents extends WP_Widget {
 				if (array_key_exists( 'SUMMARY', $anEvent )) {
 					if ($showEventSummary) {
 						$eventSummaryTpl = new TemplateFromString( '<span class="eventListItemSummary">{EVENTLIST_ITEM_SUMMARY}</span>' );
-						$eventSummaryTpl->replaceTokenByContent( 'EVENTLIST_ITEM_SUMMARY', $anEvent['SUMMARY'] );
+						$eventSummaryTpl->replaceTokenByContent( 'EVENTLIST_ITEM_SUMMARY', stripslashes_deep($anEvent['SUMMARY']) );
 						$eventListItemTpl->replaceTokenByContent( 'EVENTLIST_ITEM_SUMMARY_TPL', $eventSummaryTpl->get() );
 					} else {
 						$eventListItemTpl->deleteToken( 'EVENTLIST_ITEM_SUMMARY_TPL' );
@@ -493,7 +512,7 @@ class iCalEvents extends WP_Widget {
 				if (array_key_exists( 'DESCRIPTION', $anEvent )) {
 					if ($showEventDescription) {
 						$eventDescriptionTpl = new TemplateFromString( '<span class="eventListItemDescription">{EVENTLIST_ITEM_DESCRIPTION}</span>' );
-						$eventDescriptionTpl->replaceTokenByContent( 'EVENTLIST_ITEM_DESCRIPTION', $anEvent['DESCRIPTION'] );
+						$eventDescriptionTpl->replaceTokenByContent( 'EVENTLIST_ITEM_DESCRIPTION', stripslashes_deep($anEvent['DESCRIPTION']) );
 						$eventListItemTpl->replaceTokenByContent( 'EVENTLIST_ITEM_DESCRIPTION_TPL', $eventDescriptionTpl->get() );
 					} else {
 						$eventListItemTpl->deleteToken( 'EVENTLIST_ITEM_DESCRIPTION_TPL' );
@@ -508,7 +527,7 @@ class iCalEvents extends WP_Widget {
 				if (array_key_exists( 'LOCATION', $anEvent )) {
 					if ($showEventLocation) {
 						$eventLocationTpl = new TemplateFromString( '<span class="eventListItemLocation">{EVENTLIST_ITEM_LOCATION}</span>' );
-						$eventLocationTpl->replaceTokenByContent( 'EVENTLIST_ITEM_LOCATION', $anEvent['LOCATION'] );
+						$eventLocationTpl->replaceTokenByContent( 'EVENTLIST_ITEM_LOCATION', stripslashes_deep($anEvent['LOCATION']) );
 						$eventListItemTpl->replaceTokenByContent( 'EVENTLIST_ITEM_LOCATION_TPL', $eventLocationTpl->get() );
 					} else {
 						$eventListItemTpl->deleteToken( 'EVENTLIST_ITEM_LOCATION_TPL' );
