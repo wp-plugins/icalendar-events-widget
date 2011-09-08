@@ -53,12 +53,11 @@ n/a
 
 == Changelog ==
 
-= 0.1.0 =
-* The very first version.
-
-= 0.2.0 =
-* added some very basic functionality for selecting a date range
-* minor bugfixes
+= 0.3.2 =
+* fixed a translation issue
+	
+= 0.3.1 =
+* fixed some issues with php 5.3.x
 
 = 0.3.0 =
 * added a datepicker for the date range input
@@ -66,12 +65,12 @@ n/a
 * documentation updated
 * translations updated
 
-= 0.3.1 =
-* fixed some issues with php 5.3.x
+= 0.2.0 =
+* added some very basic functionality for selecting a date range
+* minor bugfixes
 
-= 0.3.2 =
-* fixed a translation issue
-	
+= 0.1.0 =
+* The very first version.
 	
 
 == Upgrade Notice ==
