@@ -55,7 +55,7 @@ n/a
 == Changelog ==
 
 = 0.3.3 =
-* french translation added
+* added french translation
 
 = 0.3.2 =
 * fixed a translation issue
