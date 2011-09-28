@@ -4,7 +4,7 @@
 	Plugin Script: iCalEvents.php
 	Plugin URI: http://programmschmie.de/icalevents/
 	Description: Shows you upcoming events for a configurable iCalendar .ics file. You can also set a range of dates.
-	Version: 0.3.2
+	Version: 0.3.3
 	Author: [programmschmie.de]
 	Author URI: http://programmschmie.de
 	Text Domain: icalevents
@@ -30,7 +30,7 @@
 */
 
 
-define('ICALEVENTS_VERSION', '0.3.2');
+define('ICALEVENTS_VERSION', '0.3.3');
 
 class iCalEvents extends WP_Widget {
 	private	/** @type {string} */ $widgetFilePath;
@@ -401,6 +401,7 @@ class iCalEvents extends WP_Widget {
 
 		$iCal = new ical($iCalURI);
 		$iCalEvents = $iCal->eventsFromRange( $showEventRangeDateFrom, $showEventRangeDateTo );
+
 		if (!$iCalEvents)
 			return false;
 

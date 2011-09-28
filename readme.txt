@@ -28,6 +28,7 @@ This widget shows you upcoming events for a configurable iCalendar .ics file. Th
 = Translations =
 * English
 * German
+* France
 
 
 == Installation ==
@@ -52,6 +53,9 @@ n/a
 
 
 == Changelog ==
+
+= 0.3.3 =
+* french translation added
 
 = 0.3.2 =
 * fixed a translation issue
